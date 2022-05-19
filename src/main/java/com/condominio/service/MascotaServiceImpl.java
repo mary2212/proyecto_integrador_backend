@@ -36,8 +36,8 @@ public class MascotaServiceImpl implements MascotaService{
 	}
 
 	@Override
-	public Optional<Mascota> listaMascotaPorId(int idMascota) {
-		return repository.findById(idMascota);
+	public Optional<Mascota> listaMascotaPorId(int idDepartamento) {
+		return repository.findById(idDepartamento);
 	}
 
 	@Override

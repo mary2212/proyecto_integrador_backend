@@ -14,4 +14,7 @@ public interface OcupanteRepository extends JpaRepository<Ocupante, Integer>{
 	
 	@Query("select e from Ocupante e where e.nombreOcupante = ?1 and e.idOcupante <> ?2")
 	public List<Ocupante> listaPorNombreDiferenteSiMismo(String nombreOcupante, int idOcupante);
+	
+	@Query("select e from Ocupante e where e.dniOcupante = ?1")
+	public List<Ocupante> listaOcupantePorDNI(String dniOcupante);
 }

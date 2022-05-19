@@ -14,5 +14,7 @@ public interface DepartamentoRepository extends JpaRepository<Departamento, Inte
 	
 	@Query("select e from Departamento e where e.numeroDepartamento = ?1 and e.idDepartamento <> ?2")
 	public List<Departamento> listaPorNumeroDiferenteSiMismo(int numeroDepartamento, int idDepartamento);
-
+	
+	@Query("select e from Departamento e where e.estado = ?1")
+	public List<Departamento> listaPorEstado(String estado);
 }

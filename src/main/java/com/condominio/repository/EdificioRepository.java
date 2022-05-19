@@ -14,4 +14,6 @@ public interface EdificioRepository extends JpaRepository<Edificio, Integer> {
 	
 	@Query("select e from Edificio e where e.nomEdificio = ?1 and e.idEdificio <> ?2")
 	public List<Edificio> listaPorNombreDiferenteSiMismo(String nomEdificio, int idEdificio);
+	
+	
 }

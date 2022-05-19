@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
@@ -26,18 +28,38 @@ import com.condominio.service.DepartamentoService;
 @CrossOrigin(origins = "http://localhost:4200")
 public class DepartamentoController {
 	
+	private Logger log = LoggerFactory.getLogger(DepartamentoController.class);
+	
 	@Autowired
 	private DepartamentoService service;
 	
-	@GetMapping
+	@GetMapping("/listar")
 	@ResponseBody
 	public ResponseEntity<List<Departamento>> listar(){
 		List<Departamento> lista = service.listaDepartamento();
 		return ResponseEntity.ok(lista);
-	}
+	}	
 	
+	@GetMapping("/listaDepartamentoPorEstado/{est}")
+	@ResponseBody
+	public ResponseEntity<List<Departamento>> listaDepartamentoPorEstado(@PathVariable("est") String est){
+		log.info("==> listaDepartamentoPorEstado ==> est : " + est);
+		
+		List<Departamento> lista = null;
+		try {
+			if(est.equals("todos")) {
+				lista = service.listaDepartamento();
+			}else {
+				lista = service.listaDepartamentoPorEstado(est);
+			}
+		} catch (Exception e) {
+
+		}
+		return ResponseEntity.ok(lista);
+	}	
+		
 	//Registra
-	@PostMapping
+	@PostMapping("/registrar")
 	@ResponseBody
 	public ResponseEntity<HashMap<String, Object>> insertaDepartamento(@RequestBody Departamento obj){
 		HashMap<String, Object> salida = new HashMap<String, Object>();
@@ -62,7 +84,7 @@ public class DepartamentoController {
 	}
 	
 	//Actualiza
-		@PutMapping
+		@PutMapping("/actualizar")
 		@ResponseBody
 		public ResponseEntity<HashMap<String, Object>> actualizaDepartamento(@RequestBody Departamento obj){
 			HashMap<String, Object> salida = new HashMap<String, Object>();

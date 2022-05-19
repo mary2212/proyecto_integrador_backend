@@ -9,9 +9,16 @@ import com.condominio.entity.Ocupante;
 public interface OcupanteService {
 
 	public abstract List<Ocupante> listaOcupante();
+	
 	public abstract Ocupante insertaActualizaOcupante(Ocupante obj);
+	
 	public abstract List<Ocupante> listaOcupantePorNombre(String nombreOcupante);
+	
 	public abstract List<Ocupante> listaOcupantePorNombreDiferenteDelMismo(String nombreOcupante, int idOcupante);
+	
 	public abstract Optional<Ocupante> listaOcupantePorId(int idOcupante);
+	
 	public abstract void eliminaPorId(int idOcupante);
+	
+	public abstract List<Ocupante> listaOcupantePorDNI(String dniOcupante);
 }

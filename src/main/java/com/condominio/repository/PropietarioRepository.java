@@ -14,5 +14,8 @@ public interface PropietarioRepository extends JpaRepository<Propietario, Intege
  
  @Query("select e from Propietario e where e.dniPropietario = ?1 and e.idPropietario <> ?2")
  public List<Propietario> listaPropPorDniDifSiMismo(String dniPropietario, int idPropietario);
+ 
+ @Query("select e from Propietario e where e.nombrePropietario = ?1")
+ public List<Propietario> listaPropietarioPorNombre(String nombrePropietario);
 
 }

@@ -26,6 +26,12 @@ public class DepartamentoServiceImpl implements DepartamentoService {
 		return repository.save(obj);
 	}
 
+	//ListaPorEstado
+		@Override
+		public List<Departamento> listaDepartamentoPorEstado(String estado) {
+			return repository.listaPorEstado(estado);
+		}
+	
 	@Override
 	public List<Departamento> listaDepartamentoPorNumero(int numeroDepartamento) {
 		return repository.listaPorNumero(numeroDepartamento);
@@ -46,8 +52,8 @@ public class DepartamentoServiceImpl implements DepartamentoService {
 	public void eliminaPorId(int idDepartamento) {
 		repository.deleteById(idDepartamento);
 		
-	}
-
-
+	}	
+	
+	
 
 }

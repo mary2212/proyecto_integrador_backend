@@ -14,18 +14,19 @@ import com.condominio.entity.Edificio;
 import com.condominio.service.EdificioService;
 
 @RestController
-@RequestMapping("/rest/util")
+@RequestMapping("/rest/listar")
 @CrossOrigin(origins = "http://localhost:4200")
-public class UtilController {
-
+public class ListarEdificio {
+	
 	@Autowired
 	private EdificioService service;
 	
-	@GetMapping("/edifcio")
+	@GetMapping("/edificio")
 	@ResponseBody
-	public ResponseEntity<List<Edificio>> listaEdificio(){
+	public ResponseEntity<List<Edificio>> listar(){
 		List<Edificio> lista = service.listaEdificio();
 		return ResponseEntity.ok(lista);
 	}
 	
+
 }

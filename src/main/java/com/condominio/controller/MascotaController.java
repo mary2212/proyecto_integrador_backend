@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
@@ -26,19 +28,52 @@ import com.condominio.service.MascotaService;
 @CrossOrigin(origins = "http://localhost:4200")
 public class MascotaController {
 
+	private Logger log = LoggerFactory.getLogger(MascotaController.class);
+
+	
 	@Autowired
 	private MascotaService service;
 	
 	//Lista
-	@GetMapping
+	@GetMapping("/listar")
 	@ResponseBody
 	public ResponseEntity<List<Mascota>> listar(){
 		List<Mascota> lista = service.listaMascota();
 		return ResponseEntity.ok(lista);
 	}
 	
+	@GetMapping("/listaMascotaPorDescripcion/{desc}")
+	@ResponseBody
+	public ResponseEntity<List<Mascota>> listaMascotaPorDescripcion(@PathVariable("desc") String desc){
+		log.info("==> listaMascotaPorDescripcion ==> desc : " + desc);
+		
+		List<Mascota> lista = null;
+		try {
+			if(desc.equals("todos")) {
+				lista = service.listaMascota();
+			}else {
+				lista = service.listaMascotaPorDescripcion(desc);
+			}
+		} catch (Exception e) {
+
+		}
+		return ResponseEntity.ok(lista);
+	}	
+	
+	@GetMapping("/id/{paramId}")
+	@ResponseBody
+	public ResponseEntity<Mascota> listaMascotaPorId(@PathVariable("paramId")int idDepartamento){
+		Optional<Mascota> optMascota = service.listaMascotaPorId(idDepartamento);
+		if(optMascota.isPresent()) {
+			return ResponseEntity.ok(optMascota.get());
+		}else {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
+	
 	    //Registra
-		@PostMapping
+		@PostMapping("/registrar")
 		@ResponseBody
 		public ResponseEntity<HashMap<String, Object>> insertaMascota(@RequestBody Mascota obj){
 			HashMap<String, Object> salida = new HashMap<String, Object>();
@@ -63,7 +98,7 @@ public class MascotaController {
 		}
 		
 		//Actualiza
-		@PutMapping
+		@PutMapping("/actualizar")
 		@ResponseBody
 		public ResponseEntity<HashMap<String, Object>> actualizaMascota(@RequestBody Mascota obj){
 			HashMap<String, Object> salida = new HashMap<String, Object>();

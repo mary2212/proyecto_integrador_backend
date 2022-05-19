@@ -19,6 +19,11 @@ public class PropietarioServiceImpl implements PropietarioService {
 	public List<Propietario> listaTodos() {
 		return repository.findAll();
 	}
+	//ListaPorNombre
+	@Override
+	public List<Propietario> listaPropietarioPorNombre(String nombrePropietario) {
+		return repository.listaPropietarioPorNombre(nombrePropietario);
+	}
 
 	@Override
 	public Propietario insertaActualizaPropietario(Propietario obj) {
@@ -40,6 +45,13 @@ public class PropietarioServiceImpl implements PropietarioService {
 		
 		return repository.findById(idPropietario);
 	}
+	@Override
+	public void eliminaPorId(int idPropietario) {
+		repository.deleteById(idPropietario);
+		
+	}
+
+
 	
 	
 }

@@ -14,4 +14,10 @@ public interface MascotaRepository extends JpaRepository<Mascota, Integer>{
 	
 	@Query("select e from Mascota e where e.descripcion =?1 and e.idMascota <> ?2")
 	public List<Mascota> listaPorDescripcionDiferenteSiMismo(String descripcion, int idMascota);
+	
+	@Query("select e from Mascota e where e.descripcion = ?1")
+	public List<Mascota> listaMascotaPorDescripcion(String descripcion);
+	
+
+	
 }

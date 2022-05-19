@@ -20,39 +20,38 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.condominio.entity.Edificio;
-import com.condominio.service.EdificioService;
+import com.condominio.entity.Usuario;
+import com.condominio.service.UsuarioService;
 
 @RestController
-@RequestMapping("/rest/edificio")
+@RequestMapping("/rest/usuario")
 @CrossOrigin(origins = "http://localhost:4200")
-public class EdificioController {
-
-	private Logger log = LoggerFactory.getLogger(EdificioController.class);
+public class UsuarioController {	
+	
+	private Logger log = LoggerFactory.getLogger(UsuarioController.class);
 	
 	@Autowired
-	private EdificioService service;
+	private UsuarioService service;
 	
-	//Lista
 	@GetMapping("/listar")
 	@ResponseBody
-	public ResponseEntity<List<Edificio>> listar(){
-		List<Edificio> lista = service.listaEdificio();
+	public ResponseEntity<List<Usuario>> listar(){
+		List<Usuario> lista = service.listaUsuario();
 		return ResponseEntity.ok(lista);
 	}
 	
-	
-	@GetMapping("/listaEdificioPorNombre/{nom}")
+	//ListarPorLogin
+	@GetMapping("/listaUsuarioPorlogin/{login}")
 	@ResponseBody
-	public ResponseEntity<List<Edificio>> listaEdificioPornombre(@PathVariable("nom") String nom){
-		log.info("==> listaEdificioPornombre ==> nom : " + nom);
+	public ResponseEntity<List<Usuario>> listaUsuarioPorlogin(@PathVariable("login") String login){
+		log.info("==> listaUsuarioPorlogin ==> nom : " + login);
 		
-		List<Edificio> lista = null;
+		List<Usuario> lista = null;
 		try {
-			if(nom.equals("todos")) {
-				lista = service.listaEdificio();
+			if(login.equals("todos")) {
+				lista = service.listaUsuario();
 			}else {
-				lista = service.listaEdificioPorNombre(nom);
+				lista = service.listaPorLogin(login);
 			}
 		} catch (Exception e) {
 
@@ -60,24 +59,23 @@ public class EdificioController {
 		return ResponseEntity.ok(lista);
 	}
 	
-	
 	//Registra
 	@PostMapping("/registrar")
 	@ResponseBody
-	public ResponseEntity<HashMap<String, Object>> insertaEdificio(@RequestBody Edificio obj){
+	public ResponseEntity<HashMap<String, Object>> insertaUsuario(@RequestBody Usuario obj){
 		HashMap<String, Object> salida = new HashMap<String, Object>();
 		try {
-			List<Edificio> listaEdificio = service.listaEdificioPorNombre(obj.getNomEdificio());
-			if(CollectionUtils.isEmpty(listaEdificio)) {
-				obj.setIdEdificio(0);
-				Edificio objSalida = service.insertaActualizaEdificio(obj);
+			List<Usuario> listaUsuario = service.listaUsuarioPorNombre(obj.getNombre());
+			if(CollectionUtils.isEmpty(listaUsuario)) {
+				obj.setIdUsuario(0);
+				Usuario objSalida = service.insertaActualizaUsuario(obj);
 				if(objSalida == null) {
 					salida.put("mensaje", "Error en el registro ");
 				}else {
 					salida.put("mensaje", "Registro exitoso ");
 				}				
 			}else {
-				salida.put("mensaje", "El nombre ya existe " + obj.getNomEdificio());
+				salida.put("mensaje", "El nombre ya existe " + obj.getNombre());
 			}			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -89,24 +87,24 @@ public class EdificioController {
 	//Actualiza
 	@PutMapping("/actualizar")
 	@ResponseBody
-	public ResponseEntity<HashMap<String, Object>> actualizaEdificio(@RequestBody Edificio obj){
+	public ResponseEntity<HashMap<String, Object>> actualizaUsuario(@RequestBody Usuario obj){
 		HashMap<String, Object> salida = new HashMap<String, Object>();
 		try {		
-			Optional<Edificio> optional = service.listaEdificioPorId(obj.getIdEdificio());
+			Optional<Usuario> optional = service.listaUsuarioPorId(obj.getIdUsuario());
 			if(optional.isPresent()) {
-				List<Edificio> listaEdificio = service.listaEdificioPorNombreDiferenteDelMismo(obj.getNomEdificio(), obj.getIdEdificio());
-				if(CollectionUtils.isEmpty(listaEdificio)) {
-					Edificio objSalida = service.insertaActualizaEdificio(obj);
+				List<Usuario> listaUsuario = service.listaPorNombreDiferenteSiMismo(obj.getNombre(), obj.getIdUsuario());
+				if(CollectionUtils.isEmpty(listaUsuario)) {
+					Usuario objSalida = service. insertaActualizaUsuario(obj);
 					if(objSalida == null) {
 						salida.put("mensaje", "Error en actualizar ");
 					}else {
 						salida.put("mensaje", "Actualizacion exitosa ");
 					}	
 				}else {
-					salida.put("mensaje", "El Nombre ya Existe " + obj.getNomEdificio());
+					salida.put("mensaje", "El Nombre ya Existe " + obj.getNombre());
 				}
 			}else {
-				salida.put("mensaje", "El ID no existe " + obj.getIdEdificio());
+				salida.put("mensaje", "El ID no existe " + obj.getIdUsuario());
 			}
 					
 		} catch (Exception e) {
@@ -119,10 +117,10 @@ public class EdificioController {
 	//Elimina
 	@DeleteMapping("/{id}")
 	@ResponseBody
-	public ResponseEntity<HashMap<String, Object>> eliminaEdificio(@PathVariable int id){
+	public ResponseEntity<HashMap<String, Object>> eliminaUsuario(@PathVariable int id){
 		HashMap<String, Object> salida = new HashMap<String, Object>();
 		try {		
-			Optional<Edificio> optional = service.listaEdificioPorId(id);
+			Optional<Usuario> optional = service.listaUsuarioPorId(id);
 			if(optional.isPresent()) {
 				service.eliminaPorId(id);
 				salida.put("mensaje", "Eliminacion exitosa ");

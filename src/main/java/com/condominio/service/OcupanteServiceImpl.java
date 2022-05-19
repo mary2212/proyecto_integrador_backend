@@ -45,4 +45,9 @@ public class OcupanteServiceImpl implements OcupanteService{
 		
 	}
 
+	@Override
+	public List<Ocupante> listaOcupantePorDNI(String dniOcupante) {
+		return repository.listaOcupantePorDNI(dniOcupante);
+	}
+
 }
