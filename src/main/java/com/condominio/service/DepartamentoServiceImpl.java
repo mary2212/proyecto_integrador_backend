@@ -27,10 +27,10 @@ public class DepartamentoServiceImpl implements DepartamentoService {
 	}
 
 	//ListaPorEstado
-		@Override
-		public List<Departamento> listaDepartamentoPorEstado(String estado) {
-			return repository.listaPorEstado(estado);
-		}
+	@Override
+	public List<Departamento> listaDepartamentoPorEstado(String estado) {
+		return repository.listaPorEstado(estado);
+	}
 	
 	@Override
 	public List<Departamento> listaDepartamentoPorNumero(int numeroDepartamento) {
@@ -38,8 +38,7 @@ public class DepartamentoServiceImpl implements DepartamentoService {
 	}
 
 	@Override
-	public List<Departamento> listaDepartamentoPorNumeroDiferenteDelMismo(int numeroDepartamento,
-			int idDepartamento) {
+	public List<Departamento> listaDepartamentoPorNumeroDiferenteDelMismo(int numeroDepartamento, int idDepartamento) {
 		return repository.listaPorNumeroDiferenteSiMismo(numeroDepartamento, idDepartamento);
 	}
 

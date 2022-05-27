@@ -21,39 +21,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.condominio.entity.Edificio;
-import com.condominio.service.EdificioService;
+import com.condominio.entity.Visitante;
+import com.condominio.service.VisitanteService;
 
 @RestController
-@RequestMapping("/rest/edificio")
+@RequestMapping("/rest/visitante")
 @CrossOrigin(origins = "http://localhost:4200")
-public class EdificioController {
-
-	private Logger log = LoggerFactory.getLogger(EdificioController.class);
+public class VisitanteController {
 	
+	private Logger log = LoggerFactory.getLogger(VisitanteController.class);
+
 	@Autowired
-	private EdificioService service;
+	private VisitanteService service;
 	
 	//Lista
 	@GetMapping("/listar")
 	@ResponseBody
-	public ResponseEntity<List<Edificio>> listar(){
-		List<Edificio> lista = service.listaEdificio();
+	public ResponseEntity<List<Visitante>> listar(){
+		List<Visitante> lista = service.listaVisitante();
 		return ResponseEntity.ok(lista);
 	}
-	
-	
-	@GetMapping("/listaEdificioPorNombre/{nom}")
-	@ResponseBody
-	public ResponseEntity<List<Edificio>> listaEdificioPornombre(@PathVariable("nom") String nom){
-		log.info("==> listaEdificioPornombre ==> nom : " + nom);
 		
-		List<Edificio> lista = null;
+	//ListaPorDNI
+	@GetMapping("/listaVisitantePorDNI/{dni}")
+	@ResponseBody
+	public ResponseEntity<List<Visitante>> listaVisitantePorDNI(@PathVariable("dni") String dni){
+		log.info("==> listaVisitantePorDNI ==> dni : " + dni);
+		
+		List<Visitante> lista = null;
 		try {
-			if(nom.equals("todos")) {
-				lista = service.listaEdificio();
+			if(dni.equals("todos")) {
+				lista = service.listaVisitante();
 			}else {
-				lista = service.listaEdificioPorNombre(nom);
+				lista = service.listaVisitantePorDNI(dni);
 			}
 		} catch (Exception e) {
 
@@ -61,25 +61,24 @@ public class EdificioController {
 		return ResponseEntity.ok(lista);
 	}
 	
-	
 	//Registra
 	@PostMapping("/registrar")
 	@ResponseBody
-	public ResponseEntity<HashMap<String, Object>> insertaEdificio(@RequestBody Edificio obj){
+	public ResponseEntity<HashMap<String, Object>> insertaVisitante(@RequestBody Visitante obj){
 		HashMap<String, Object> salida = new HashMap<String, Object>();
 		try {
-			List<Edificio> listaEdificio = service.listaEdificioPorNombre(obj.getNomEdificio());
-			if(CollectionUtils.isEmpty(listaEdificio)) {
-				obj.setIdEdificio(0);
+			List<Visitante> listaVisitante = service.listaVisitantePorDNI(obj.getDniVisitante());
+			if(CollectionUtils.isEmpty(listaVisitante)) {
+				obj.setIdVisitante(0);
 				obj.setFechaRegistro(new Date());
-				Edificio objSalida = service.insertaActualizaEdificio(obj);
+				Visitante objSalida = service.insertaActualizaVisitante(obj);
 				if(objSalida == null) {
 					salida.put("mensaje", "Error en el registro ");
 				}else {
 					salida.put("mensaje", "Registro exitoso ");
 				}				
 			}else {
-				salida.put("mensaje", "El nombre ya existe " + obj.getNomEdificio());
+				salida.put("mensaje", "El Visitante ya existe " + obj.getDniVisitante());
 			}			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,24 +90,24 @@ public class EdificioController {
 	//Actualiza
 	@PutMapping("/actualizar")
 	@ResponseBody
-	public ResponseEntity<HashMap<String, Object>> actualizaEdificio(@RequestBody Edificio obj){
+	public ResponseEntity<HashMap<String, Object>> actualizaVisitante(@RequestBody Visitante obj){
 		HashMap<String, Object> salida = new HashMap<String, Object>();
 		try {		
-			Optional<Edificio> optional = service.listaEdificioPorId(obj.getIdEdificio());
+			Optional<Visitante> optional = service.listaVisitantePorId(obj.getIdVisitante());
 			if(optional.isPresent()) {
-				List<Edificio> listaEdificio = service.listaEdificioPorNombreDiferenteDelMismo(obj.getNomEdificio(), obj.getIdEdificio());
-				if(CollectionUtils.isEmpty(listaEdificio)) {
-					Edificio objSalida = service.insertaActualizaEdificio(obj);
+				List<Visitante> listaVisitante = service.listaVisitantePorNombreDiferenteDelMismo(obj.getNombreVisitante(), obj.getIdVisitante());
+				if(CollectionUtils.isEmpty(listaVisitante)) {
+					Visitante objSalida = service.insertaActualizaVisitante(obj);
 					if(objSalida == null) {
 						salida.put("mensaje", "Error en actualizar ");
 					}else {
 						salida.put("mensaje", "Actualizacion exitosa ");
 					}	
 				}else {
-					salida.put("mensaje", "El Nombre ya Existe " + obj.getNomEdificio());
+					salida.put("mensaje", "El Visitante ya Existe " + obj.getNombreVisitante());
 				}
 			}else {
-				salida.put("mensaje", "El ID no existe " + obj.getIdEdificio());
+				salida.put("mensaje", "El ID no existe " + obj.getIdVisitante());
 			}
 					
 		} catch (Exception e) {
@@ -121,10 +120,10 @@ public class EdificioController {
 	//Elimina
 	@DeleteMapping("/{id}")
 	@ResponseBody
-	public ResponseEntity<HashMap<String, Object>> eliminaEdificio(@PathVariable int id){
+	public ResponseEntity<HashMap<String, Object>> eliminaVisitante(@PathVariable int id){
 		HashMap<String, Object> salida = new HashMap<String, Object>();
 		try {		
-			Optional<Edificio> optional = service.listaEdificioPorId(id);
+			Optional<Visitante> optional = service.listaVisitantePorId(id);
 			if(optional.isPresent()) {
 				service.eliminaPorId(id);
 				salida.put("mensaje", "Eliminacion exitosa ");
@@ -136,5 +135,6 @@ public class EdificioController {
 			salida.put("mensaje", "Error en la eliminacion " + e.getMessage());
 		}		
 		return ResponseEntity.ok(salida);
-	}	
+	}
+	
 }

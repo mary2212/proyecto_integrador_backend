@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,9 +29,12 @@ public class Visita {
 	@JoinColumn(name="idVisitante")
 	private Visitante visitante;
 	
+	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
 	private Date fechaEntrada;
+	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
 	private Date fechaSalida;
-	private String Estado;
+	
+	private String estado;
 	
 	@ManyToOne
 	@JoinColumn(name="idDepartamento")
