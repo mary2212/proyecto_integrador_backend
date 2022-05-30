@@ -1,5 +1,6 @@
 package com.condominio.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,5 +19,8 @@ public interface VisitaService {
 	public abstract void eliminaPorId(int idVisita);
 	
 	public abstract List<Visita> listaVisitaPorEstado(String estado);
+	
+	public abstract List<Visita> listaVisitaPorNumeroDiferenteDelMismo(Date fechaEntrada, int idVisita);
+
 	
 }

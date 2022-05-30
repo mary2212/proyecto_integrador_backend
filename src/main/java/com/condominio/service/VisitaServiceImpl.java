@@ -1,5 +1,6 @@
 package com.condominio.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +45,11 @@ public class VisitaServiceImpl implements VisitaService{
 	@Override
 	public List<Visita> listaVisitaPorId2(int idVisita) {
 		return repository.listaPorId(idVisita);
+	}
+
+	@Override
+	public List<Visita> listaVisitaPorNumeroDiferenteDelMismo(Date fechaEntrada, int idVisita) {
+		return repository.listaPorNumeroDiferenteSiMismo(fechaEntrada, idVisita);
 	}
 
 

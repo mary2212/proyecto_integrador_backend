@@ -1,5 +1,6 @@
 package com.condominio.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,17 +40,17 @@ public class VisitaController {
 		return ResponseEntity.ok(lista);
 	}	
 	
-	@GetMapping("/listaVisitaPorID2/{id}")
+	@GetMapping("/listaVisitaPorEstado/{est}")
 	@ResponseBody
-	public ResponseEntity<Optional<Visita>> listaVisitaPorid2(@PathVariable("id") int idVisita){
-		log.info("==> listaVisitaPorid2 ==> id : " + idVisita);
+	public ResponseEntity<List<Visita>> listaVisitaPorEstado(@PathVariable("est") String est){
+		log.info("==> listaVisitaPorEstado ==> est : " + est);
 		
-		Optional<Visita> lista = service.listaVisitaPorId(idVisita);
+		List<Visita> lista = null;
 		try {
-			if(lista.equals(lista)) {
-				lista = service.listaVisitaPorId(idVisita);
+			if(est.equals("todos")) {
+				lista = service.listaVisita();
 			}else {
-				lista = service.listaVisitaPorId(idVisita);
+				lista = service.listaVisitaPorEstado(est);
 			}
 		} catch (Exception e) {
 
@@ -75,6 +77,9 @@ public class VisitaController {
 			List<Visita> listaVisita = service.listaVisitaPorId2(obj.getIdVisita());
 			if(CollectionUtils.isEmpty(listaVisita)) {
 				obj.setIdVisita(0);
+				obj.setEstado("entrada");
+				obj.setFechaEntrada(new Date());
+
 				Visita objSalida = service.insertaActualizaVisita(obj);
 				if(objSalida == null) {
 					salida.put("mensaje", "Error en el registro ");
@@ -91,9 +96,35 @@ public class VisitaController {
 		return ResponseEntity.ok(salida);
 	}
 	
-	
-	
-	
-	
-	
+	//Actualiza
+	@PutMapping("/actualizar")
+	@ResponseBody
+	public ResponseEntity<HashMap<String, Object>> actualizaVisita(@RequestBody Visita obj){
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		try {		
+			Optional<Visita> optional = service.listaVisitaPorId(obj.getIdVisita());
+			if(optional.isPresent()) {
+				obj.setEstado("salio");
+				List<Visita> listaVisita = service.listaVisitaPorNumeroDiferenteDelMismo(obj.getFechaEntrada(), obj.getIdVisita());
+				if(CollectionUtils.isEmpty(listaVisita)) {
+					Visita objSalida = service.insertaActualizaVisita(obj);
+					if(objSalida == null) {
+						salida.put("mensaje", "Error en actualizar ");
+					}else {
+						salida.put("mensaje", "Actualizacion exitosa ");
+					}	
+				}else {
+					salida.put("mensaje", "La visita ya Existe " + obj.getFechaEntrada());
+				}
+			}else {
+				salida.put("mensaje", "El ID no existe " + obj.getIdVisita());
+			}
+					
+		} catch (Exception e) {
+			e.printStackTrace();
+			salida.put("mensaje", "Error en la actualizacion " + e.getMessage());
+		}		
+		return ResponseEntity.ok(salida);
+	}
+		
 }
