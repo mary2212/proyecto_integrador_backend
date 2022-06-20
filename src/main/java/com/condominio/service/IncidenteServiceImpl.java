@@ -6,7 +6,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.condominio.entity.Departamento;
+import com.condominio.entity.Edificio;
 import com.condominio.entity.Incidente;
+import com.condominio.repository.DepartamentoRepository;
+import com.condominio.repository.EdificioRepository;
 import com.condominio.repository.IncidenteRepository;
 
 @Service
@@ -14,6 +18,13 @@ public class IncidenteServiceImpl implements IncidenteService{
 
 	@Autowired
 	private IncidenteRepository repository;
+	
+	@Autowired
+	private EdificioRepository edificiorepository;
+	
+	@Autowired
+	private DepartamentoRepository departamentorepository;
+	
 
 	@Override
 	public List<Incidente> listaIncidente() {
@@ -46,16 +57,23 @@ public class IncidenteServiceImpl implements IncidenteService{
 	}
 
 	@Override
-	public List<Incidente> listaIncidetePorDescripcion(String descripcion) {
-		return repository.listaPorDescripcion(descripcion);
+	public List<Incidente> listaPorDescripcionLike(String descripcion) {
+		return repository.listaPorDescripcionLike(descripcion);
 	}
 
 	@Override
-	public List<Incidente> listaIncidentePorEdificioDepartamentoEstado(int idEdificio, int idDepartamento,
-			int estado) {
-		return repository.listaIncidentePorEdificioDepartamentoEstado(idEdificio, idDepartamento, estado);
+	public List<Incidente> listaIncidentePorEdificioDepartamento(int idEdificio, int idDepartamento) {
+		return repository.listaIncidentePorEdificioDepartamento(idEdificio, idDepartamento);
 	}
-	
 
+	@Override
+	public List<Edificio> listaEdificio() {
+		return edificiorepository.findAll();
+	}
+
+	@Override
+	public List<Departamento> listaDepartamento() {
+		return departamentorepository.findAll();
+	}
 
 }

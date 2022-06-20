@@ -40,5 +40,5 @@ public class Incidente {
 	@JoinColumn(name="idEdificio")
 	private Edificio edificio;
 	
-	private int estado;
+	private String estado;
 }
