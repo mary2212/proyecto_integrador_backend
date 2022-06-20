@@ -23,7 +23,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.condominio.entity.Departamento;
+import com.condominio.entity.Edificio;
 import com.condominio.entity.Incidente;
+import com.condominio.service.DepartamentoService;
+import com.condominio.service.EdificioService;
 import com.condominio.service.IncidenteService;
 
 @RestController
@@ -36,6 +40,12 @@ public class IncidenteController {
 	@Autowired
 	private IncidenteService service;
 	
+	@Autowired
+	private EdificioService edificioservice;
+	
+	@Autowired
+	private DepartamentoService departamentoservice;
+	
 	@GetMapping("/listar")
 	@ResponseBody
 	public ResponseEntity<List<Incidente>> listar(){
@@ -43,17 +53,31 @@ public class IncidenteController {
 		return ResponseEntity.ok(lista);
 	}
 	
-	@GetMapping("/listaIncidentePorDescripcion/{desc}")
+	@GetMapping("/listarPorEdificio")
 	@ResponseBody
-	public ResponseEntity<List<Incidente>> listaIncidentePorDescripcion(@PathVariable("desc") String desc){
-		log.info("==> listaPropietarioPorNombre ==> est : " + desc);
+	public ResponseEntity<List<Edificio>> listarPorEdificio(){
+		List<Edificio> listaEdificio = edificioservice.listaEdificio();
+		return ResponseEntity.ok(listaEdificio);
+	}
+	
+	@GetMapping("/listarDepartamento")
+	@ResponseBody
+	public ResponseEntity<List<Departamento>> listardepartamento(){
+		List<Departamento> lista = departamentoservice.listaDepartamento();
+		return ResponseEntity.ok(lista);
+	}
+	
+	@GetMapping("/listaIncidentePorEstado/{est}")
+	@ResponseBody
+	public ResponseEntity<List<Incidente>> listaIncidentePorDescripcion(@PathVariable("est") String est){
+		log.info("==> listaPropietarioPorNombre ==> est : " + est);
 		
 		List<Incidente> lista = null;
 		try {
-			if(desc.equals("todos")) {
+			if(est.equals("todos")) {
 				lista = service.listaIncidente();
 			}else {
-				lista = service.listaIncidetePorDescripcion(desc);
+				lista = service.listaIncidetePorEstado("%"+est+"%");
 			}
 		} catch (Exception e) {
 
@@ -63,81 +87,76 @@ public class IncidenteController {
 	
 	@GetMapping("/listaIncidenteConParametros")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> listaDocenteEdificioDepartamentoEstado(
+	public ResponseEntity<Map<String, Object>> listaIncidenteEdificioDepartamento(
 			@RequestParam(name= "idEdificio", required = false, defaultValue = "-1")int idEdificio,
-			@RequestParam(name= "idDepartamento", required = false, defaultValue = "-1")int idDepartamento,
-			@RequestParam(name= "estado", required = true, defaultValue = "1")int estado){
+			@RequestParam(name= "idDepartamento", required = false, defaultValue = "-1")int idDepartamento){
 		Map<String, Object> salida = new HashMap<>();
-		try {
-			List<Incidente> lista = service.listaIncidentePorEdificioDepartamentoEstado(idEdificio,idDepartamento,estado);
+		try {			
+			List<Incidente> lista = service.listaIncidentePorEdificioDepartamento(idEdificio, idDepartamento);
 			if(CollectionUtils.isEmpty(lista)) {
 				salida.put("mensaje", "No existen datos para mostrar");
 			}else {
 				salida.put("lista", lista);
-				salida.put("mensaje", "Existen " + lista.size() + " incidentes para mostrar");
+				salida.put("mensaje", "Existen " + lista.size() + " elementos para mostrar");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			salida.put("mensaje", "Error al listar" + e.getMessage());
-		}		
-				
-		
+		}	
 		return ResponseEntity.ok(salida);
 	}
-	
+
 	//Registra
 	@PostMapping("/registrar")
 	@ResponseBody
-	public ResponseEntity<HashMap<String, Object>> insertaIncidente(@RequestBody Incidente obj){
-		HashMap<String, Object> salida = new HashMap<String, Object>();
+	public ResponseEntity<Map<String, Object>> registraIncidente(@RequestBody Incidente obj){
+		Map<String, Object> salida = new HashMap<>();
 		try {
-			List<Incidente> listaIncidente = service.listaIncidetePorDescripcion(obj.getDescripcion());
-			if(CollectionUtils.isEmpty(listaIncidente)) {
-				obj.setIdIncidente(0);
-				obj.setFechaIncidente(new Date());
-
-				Incidente objSalida = service.insertaActualizaIncidente(obj);
-				if(objSalida == null) {
-					salida.put("mensaje", "Error en el registro ");
-				}else {
-					salida.put("mensaje", "Registro exitoso ");
-				}				
+			obj.setIdIncidente(0);
+			obj.setFechaIncidente(new Date());
+			obj.setEstado("No Atendido");
+			Incidente objSalida = service.insertaActualizaIncidente(obj);
+			if(objSalida == null) {
+				salida.put("mensaje", "Error en el Registro ");
 			}else {
-				salida.put("mensaje", "El Incidente ya existe " + obj.getDescripcion());
-			}			
+				salida.put("mensaje", "Registro Exitoso ");
+			}	
 		} catch (Exception e) {
 			e.printStackTrace();
-			salida.put("mensaje", "Error en el registro " + e.getMessage());
 		}		
 		return ResponseEntity.ok(salida);
 	}
 	
-	//Actualiza
-	@PutMapping("/actualizar")
+	@PutMapping("/actualiza")
 	@ResponseBody
-	public ResponseEntity<HashMap<String, Object>> actualizaIncidente(@RequestBody Incidente obj){
-		HashMap<String, Object> salida = new HashMap<String, Object>();
-		try {		
-			Optional<Incidente> optional = service.listaIncidentePorId(obj.getIdIncidente());
-			if(optional.isPresent()) {
-				List<Incidente> listaDepartamento = service.listaIncidentePorEstadoDiferenteDelMismo(obj.getEstado(), obj.getIdIncidente());
-				if(CollectionUtils.isEmpty(listaDepartamento)) {
-					Incidente objSalida = service.insertaActualizaIncidente(obj);
-					if(objSalida == null) {
-						salida.put("mensaje", "Error en actualizar ");
-					}else {
-						salida.put("mensaje", "Actualizacion exitosa ");
-					}	
-				}else {
-					salida.put("mensaje", "El Departamento ya Existe " + obj.getEstado());
-				}
+	public ResponseEntity<Map<String, Object>> actualizaaIncidente(@RequestBody Incidente obj){
+		Map<String, Object> salida = new HashMap<>();
+		try {
+			Incidente objSalida = service.insertaActualizaIncidente(obj);
+			if(objSalida == null) {
+				salida.put("mensaje", "Error al Actualizar ");
 			}else {
-				salida.put("mensaje", "El ID no existe " + obj.getIdIncidente());
-			}
-					
+				salida.put("mensaje", "Actualizacion Exitosa ");
+			}	
 		} catch (Exception e) {
 			e.printStackTrace();
-			salida.put("mensaje", "Error en la actualizacion " + e.getMessage());
+		}		
+		return ResponseEntity.ok(salida);
+	}
+	
+	@PutMapping("/actualiza2")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> actualizaaIncidente2(@RequestBody Incidente obj){
+		Map<String, Object> salida = new HashMap<>();
+		try {
+			obj.setEstado("Atendido");
+			Incidente objSalida = service.insertaActualizaIncidente(obj);
+			if(objSalida == null) {
+				salida.put("mensaje", "Error al Actualizar ");
+			}else {
+				salida.put("mensaje", "Actualizacion Exitosa ");
+			}	
+		} catch (Exception e) {
+			e.printStackTrace();
 		}		
 		return ResponseEntity.ok(salida);
 	}
