@@ -22,7 +22,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Incidente {
-
+	//comentario 1
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idIncidente;
@@ -41,4 +41,6 @@ public class Incidente {
 	private Edificio edificio;
 	
 	private String estado;
+	
+	private String solucion;
 }

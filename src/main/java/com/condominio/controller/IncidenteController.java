@@ -35,6 +35,7 @@ import com.condominio.service.IncidenteService;
 @CrossOrigin(origins = "http://localhost:4200")
 public class IncidenteController {
 	
+	//comentario 5
 	private Logger log = LoggerFactory.getLogger(IncidenteController.class);
 	
 	@Autowired
@@ -93,6 +94,27 @@ public class IncidenteController {
 		Map<String, Object> salida = new HashMap<>();
 		try {			
 			List<Incidente> lista = service.listaIncidentePorEdificioDepartamento(idEdificio, idDepartamento);
+			if(CollectionUtils.isEmpty(lista)) {
+				salida.put("mensaje", "No existen datos para mostrar");
+			}else {
+				salida.put("lista", lista);
+				salida.put("mensaje", "Existen " + lista.size() + " elementos para mostrar");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		return ResponseEntity.ok(salida);
+	}
+	
+	@GetMapping("/listaIncidenteConParametros2")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> listaIncidenteEdificioDepartamento2(
+			@RequestParam(name= "idEdificio", required = false, defaultValue = "-1")int idEdificio,
+			@RequestParam(name= "idDepartamento", required = false, defaultValue = "-1")int idDepartamento,
+			@RequestParam(name= "estado", required = false, defaultValue = "")String estado){
+		Map<String, Object> salida = new HashMap<>();
+		try {			
+			List<Incidente> lista = service.listaIncidentePorEstadoEdificioDepartamento(idEdificio, idDepartamento, "%"+estado+"%");
 			if(CollectionUtils.isEmpty(lista)) {
 				salida.put("mensaje", "No existen datos para mostrar");
 			}else {

@@ -16,6 +16,7 @@ import com.condominio.repository.IncidenteRepository;
 @Service
 public class IncidenteServiceImpl implements IncidenteService{
 
+	//comentario 4
 	@Autowired
 	private IncidenteRepository repository;
 	
@@ -74,6 +75,12 @@ public class IncidenteServiceImpl implements IncidenteService{
 	@Override
 	public List<Departamento> listaDepartamento() {
 		return departamentorepository.findAll();
+	}
+
+	@Override
+	public List<Incidente> listaIncidentePorEstadoEdificioDepartamento(int idEdificio, int idDepartamento,
+			String estado) {
+		return repository.listaIncidentePorEstadoEdificioDepartamento(idEdificio, idDepartamento, estado);
 	}
 
 }
