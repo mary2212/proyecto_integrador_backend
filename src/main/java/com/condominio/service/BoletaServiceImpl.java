@@ -55,4 +55,10 @@ public class BoletaServiceImpl implements BoletaService{
 		return repository.listaBoletaPorEstado(estado);
 	}
 
+	@Override
+	public List<Boleta> listaBoletaPorEstadoServicioNombre(String estado, int idServicio, int idPropietario) {
+		// TODO Auto-generated method stub
+		return repository.listaBoletaPorEstadoServicioNombre(estado, idServicio, idPropietario);
+	}
+
 }

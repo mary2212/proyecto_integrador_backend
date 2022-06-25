@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.condominio.entity.Boleta;
-import com.condominio.entity.Incidente;
+
 
 
 public interface BoletaService {
@@ -22,4 +22,6 @@ public interface BoletaService {
 	public abstract Optional<Boleta> listaBoletaPorId(int idBoleta);
 	
 	public List<Boleta> listaBoletaPorEstado(String estado);
+	
+	public List<Boleta> listaBoletaPorEstadoServicioNombre(String estado, int idServicio, int idPropietario);
 }
