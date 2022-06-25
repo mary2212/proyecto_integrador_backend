@@ -41,4 +41,6 @@ public class Incidente {
 	private Edificio edificio;
 	
 	private String estado;
+	
+	private String solucion;
 }

@@ -29,4 +29,6 @@ public interface IncidenteService {
 	public abstract Optional<Incidente> listaIncidentePorId(int idIncidente);
 	
 	public List<Incidente> listaIncidentePorEdificioDepartamento(int idEdificio, int idDepartamento);
+	
+	public List<Incidente> listaIncidentePorEdificioDepartamento2(int idEdificio, int idDepartamento, String estado);
 }

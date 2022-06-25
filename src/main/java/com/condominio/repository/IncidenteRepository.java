@@ -21,5 +21,8 @@ public interface IncidenteRepository extends JpaRepository<Incidente, Integer> {
 		
 	@Query("select e from Incidente e where (?1 is -1 or e.edificio.idEdificio = ?1) and (?2 is -1 or e.departamento.idDepartamento = ?2)")
 	public List<Incidente> listaIncidentePorEdificioDepartamento(int idEdificio, int idDepartamento);
+	
+	@Query("select e from Incidente e where (?1 is -1 or e.edificio.idEdificio = ?1) and (?2 is -1 or e.departamento.idDepartamento = ?2) and (?3 is '' or e.estado = ?3)")
+	public List<Incidente> listaIncidentePorEdificioDepartamento2(int idEdificio, int idDepartamento, String estado);
 }
 

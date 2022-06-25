@@ -76,4 +76,11 @@ public class IncidenteServiceImpl implements IncidenteService{
 		return departamentorepository.findAll();
 	}
 
+	@Override
+	public List<Incidente> listaIncidentePorEdificioDepartamento2(int idEdificio, int idDepartamento, String estado) {
+		return repository.listaIncidentePorEdificioDepartamento2(idEdificio, idDepartamento, estado);
+	}
+
+
+
 }

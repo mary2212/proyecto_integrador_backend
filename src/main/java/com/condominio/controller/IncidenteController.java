@@ -84,6 +84,7 @@ public class IncidenteController {
 		}
 		return ResponseEntity.ok(lista);
 	}	
+
 	
 	@GetMapping("/listaIncidenteConParametros")
 	@ResponseBody
@@ -93,6 +94,27 @@ public class IncidenteController {
 		Map<String, Object> salida = new HashMap<>();
 		try {			
 			List<Incidente> lista = service.listaIncidentePorEdificioDepartamento(idEdificio, idDepartamento);
+			if(CollectionUtils.isEmpty(lista)) {
+				salida.put("mensaje", "No existen datos para mostrar");
+			}else {
+				salida.put("lista", lista);
+				salida.put("mensaje", "Existen " + lista.size() + " elementos para mostrar");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		return ResponseEntity.ok(salida);
+	}
+	
+	@GetMapping("/listaIncidenteConParametros2")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> listaIncidenteEdificioDepartamento2(
+			@RequestParam(name= "idEdificio", required = false, defaultValue = "-1")int idEdificio,
+			@RequestParam(name= "idDepartamento", required = false, defaultValue = "-1")int idDepartamento,
+			@RequestParam(name= "estado", required = true, defaultValue = "")String estado){
+		Map<String, Object> salida = new HashMap<>();
+		try {			
+			List<Incidente> lista = service.listaIncidentePorEdificioDepartamento2(idEdificio, idDepartamento, estado);
 			if(CollectionUtils.isEmpty(lista)) {
 				salida.put("mensaje", "No existen datos para mostrar");
 			}else {
