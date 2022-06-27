@@ -32,6 +32,7 @@ public interface IncidenteService {
 	
 	public List<Incidente> listaIncidentePorEdificioDepartamento(int idEdificio, int idDepartamento);
 	
-	public List<Incidente> listaIncidentePorEstadoEdificioDepartamento(int idEdificio, int idDepartamento,String estado);
+
+	public List<Incidente> listaIncidentePorEdificioDepartamento2(int idEdificio, int idDepartamento, String estado);
 
 }

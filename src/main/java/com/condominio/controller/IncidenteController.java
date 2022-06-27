@@ -1,5 +1,4 @@
 package com.condominio.controller;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -85,6 +84,7 @@ public class IncidenteController {
 		}
 		return ResponseEntity.ok(lista);
 	}	
+
 	
 	@GetMapping("/listaIncidenteConParametros")
 	@ResponseBody
@@ -111,10 +111,12 @@ public class IncidenteController {
 	public ResponseEntity<Map<String, Object>> listaIncidenteEdificioDepartamento2(
 			@RequestParam(name= "idEdificio", required = false, defaultValue = "-1")int idEdificio,
 			@RequestParam(name= "idDepartamento", required = false, defaultValue = "-1")int idDepartamento,
-			@RequestParam(name= "estado", required = false, defaultValue = "")String estado){
+
+			@RequestParam(name= "estado", required = true, defaultValue = "")String estado){
 		Map<String, Object> salida = new HashMap<>();
 		try {			
-			List<Incidente> lista = service.listaIncidentePorEstadoEdificioDepartamento(idEdificio, idDepartamento, "%"+estado+"%");
+			List<Incidente> lista = service.listaIncidentePorEdificioDepartamento2(idEdificio, idDepartamento, estado);
+https://github.com/mary2212/proyecto_integrador_backend.git
 			if(CollectionUtils.isEmpty(lista)) {
 				salida.put("mensaje", "No existen datos para mostrar");
 			}else {
