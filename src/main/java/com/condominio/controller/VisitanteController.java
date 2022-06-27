@@ -95,7 +95,7 @@ public class VisitanteController {
 		try {		
 			Optional<Visitante> optional = service.listaVisitantePorId(obj.getIdVisitante());
 			if(optional.isPresent()) {
-				List<Visitante> listaVisitante = service.listaVisitantePorNombreDiferenteDelMismo(obj.getNombreVisitante(), obj.getIdVisitante());
+				List<Visitante> listaVisitante = service.listaVisitantePorNombreDiferenteDelMismo(obj.getDniVisitante(), obj.getIdVisitante());
 				if(CollectionUtils.isEmpty(listaVisitante)) {
 					Visitante objSalida = service.insertaActualizaVisitante(obj);
 					if(objSalida == null) {
@@ -104,7 +104,7 @@ public class VisitanteController {
 						salida.put("mensaje", "Actualizacion exitosa ");
 					}	
 				}else {
-					salida.put("mensaje", "El Visitante ya Existe " + obj.getNombreVisitante());
+					salida.put("mensaje", "El Visitante ya Existe " + obj.getDniVisitante());
 				}
 			}else {
 				salida.put("mensaje", "El ID no existe " + obj.getIdVisitante());

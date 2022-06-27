@@ -13,7 +13,7 @@ public interface VisitanteService {
 	
 	public abstract List<Visitante> listaVisitantePorDNI(String dniVisitante);
 	
-	public abstract List<Visitante> listaVisitantePorNombreDiferenteDelMismo(String nombreVisitante, int idVisitante);
+	public abstract List<Visitante> listaVisitantePorNombreDiferenteDelMismo(String dniVisitante, int idVisitante);
 	
 	public abstract Optional<Visitante> listaVisitantePorId(int idVisitante);
 	

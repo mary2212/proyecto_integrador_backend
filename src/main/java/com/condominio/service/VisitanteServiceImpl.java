@@ -36,8 +36,8 @@ public class VisitanteServiceImpl implements VisitanteService{
 	}
 
 	@Override
-	public List<Visitante> listaVisitantePorNombreDiferenteDelMismo(String nombreVisitante, int idVisitante) {
-		return repository.listaPorNombreDiferenteSiMismo(nombreVisitante, idVisitante);
+	public List<Visitante> listaVisitantePorNombreDiferenteDelMismo(String dniVisitante, int idVisitante) {
+		return repository.listaPorNombreDiferenteSiMismo(dniVisitante, idVisitante);
 	}
 
 	@Override
